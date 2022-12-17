@@ -1,0 +1,15 @@
+{
+    "url": "https://www.google.com/finance/_/GoogleFinanceUi/data/batchexecute?rpcids=AiCwsd",
+
+    "request": [
+        {
+            "jq": "\"f.req=\" + ([[[\"AiCwsd\",([[[null,[$ticker,$exchange]]],($period|tonumber)] | tostring),null,\"generic\"]]] | @uri)",
+            "rawOutput": true
+        }
+    ],
+
+    "response": [
+        {"split": "\n"},
+        {"jq": ".[2] | fromjson[0][2] | fromjson[0][0] | { name: (.[0] | join(\":\")), quote: (.[2]), data: ([.[3][0][1][] | {\"d\": .[0][:5], \"p\": .[1][0]} ] ) }"}
+    ]
+}
