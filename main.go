@@ -5,6 +5,7 @@ import (
 	"flag"
 	"fmt"
 	"net/http"
+	"strings"
 )
 
 func main() {
@@ -17,7 +18,10 @@ func main() {
 		fmt.Sprintf(":%d", *port),
 		http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			vals := r.URL.Query()
-			url := vals.Get("spec")
+			// url := vals.Get("spec")
+
+			url := strings.TrimPrefix(r.URL.Path, "/")
+			fmt.Println("DEBUG", r.URL.Path, url)
 
 			vars := make(map[string]string, len(vals))
 			for k := range vals {
@@ -27,7 +31,9 @@ func main() {
 			// just for neatness in the cli
 			defer w.Write([]byte("\n"))
 
-			bts, err := zoro.SpecExec(r.Context(), url, vars)
+			bts, err := zoro.SpecExecHTTP(r.Context(), url, HttpRequestParams{
+				Query: vars,
+			})
 			if err != nil {
 				w.WriteHeader(http.StatusBadRequest)
 				bytes.NewBuffer([]byte(err.Error())).WriteTo(w)

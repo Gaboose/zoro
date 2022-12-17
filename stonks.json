@@ -2,10 +2,7 @@
     "url": "https://www.google.com/finance/_/GoogleFinanceUi/data/batchexecute?rpcids=AiCwsd",
 
     "request": [
-        {
-            "jq": "\"f.req=\" + ([[[\"AiCwsd\",([[[null,[$ticker,$exchange]]],($period|tonumber)] | tostring),null,\"generic\"]]] | @uri)",
-            "rawOutput": true
-        }
+        {"jq": "{\"headers\": {\"content-type\", \"application/x-www-form-urlencoded\"}, \"body\":\"f.req=\" + ([[[\"AiCwsd\",([[[null,[.get.ticker,.get.exchange]]],(.get.period|tonumber)] | tostring),null,\"generic\"]]] | @uri)}"}
     ],
 
     "response": [
